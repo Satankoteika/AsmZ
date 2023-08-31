@@ -1,9 +1,8 @@
-// a comment
-LDA F0 // inline comment
-MV A, R0
-ADD A, R0
-INC // inline comment
-MV A, R0 // inline comment
-SUB A, R0
-
+LDA 01
+MV A,0
+ADD A,0
+INC
+MV A,0
+SUB A,0
+JFZ A,1
 HLT
