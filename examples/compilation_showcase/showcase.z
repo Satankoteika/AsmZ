@@ -1,0 +1,10 @@
+// a comment
+LDA F0 // inline comment
+MV A, R0
+ADD A, R0
+INC // inline comment
+MV A, R0 // inline comment
+SUB A, R0
+JFZ A, R1
+
+HLT
