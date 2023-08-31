@@ -69,13 +69,6 @@ static CommandType map(std::string&& name) {
     throw std::runtime_error("Unknown command: " + name);
 }
 
-unsigned char reverse(unsigned char b) {
-    b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
-    b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
-    b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
-    return b;
-}
-
 static std::vector<char> delimiters = {' ', ','};
 static std::optional<Expression> parseInstruction(std::string line) {
     if (line.find("//") != line.npos)
@@ -113,7 +106,7 @@ static std::optional<Expression> parseInstruction(std::string line) {
 static void compileNOP(std::vector<Operand>& operands, std::ofstream& output) {
     if (!operands.empty())
         throw std::runtime_error("Too many arguments for NOP!");
-    unsigned char code = reverse(0b00000000);
+    unsigned char code = 0b00000000;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
 }
@@ -123,10 +116,10 @@ static void compileLDA(std::vector<Operand>& operands, std::ofstream& output) {
         throw std::runtime_error("Too many arguments for LDA!");
     else if (operands.size() < 1)
         throw std::runtime_error("Not enough arguments for LDA!");
-    unsigned char code = reverse(0b00000001);
+    unsigned char code = 0b00000001;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
-    code = reverse(operands[0].value);
+    code = operands[0].value;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
 }
@@ -142,31 +135,31 @@ static void compileMV(std::vector<Operand>& operands, std::ofstream& output) {
             "Second argument of MV type mismatch, present type: " +
             typeMap(operands[1].type) + ", acceptable type(s): register");
 
-    unsigned char code = reverse(0b00000010);
+    unsigned char code = 0b00000010;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
     code = 0b00000000;
 
     if (operands[0].type == ACCUMULATOR) {
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == REGISTER) {
         code += 128;
         code += operands[0].value * 8;
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == LITERAL) {
         code += 192;
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
         code = operands[0].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     }
@@ -183,31 +176,31 @@ static void compileADD(std::vector<Operand>& operands, std::ofstream& output) {
             "Second argument of ADD type mismatch, present type: " +
             typeMap(operands[1].type) + ", acceptable type(s): register");
 
-    unsigned char code = reverse(0b00000011);
+    unsigned char code = 0b00000011;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
     code = 0b00000000;
 
     if (operands[0].type == ACCUMULATOR) {
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == REGISTER) {
         code += 128;
         code += operands[0].value * 8;
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == LITERAL) {
         code += 192;
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
         code = operands[0].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     }
@@ -224,31 +217,31 @@ static void compileSUB(std::vector<Operand>& operands, std::ofstream& output) {
             "Second argument of ADD type mismatch, present type: " +
             typeMap(operands[1].type) + ", acceptable type(s): register");
 
-    unsigned char code = reverse(0b00000100);
+    unsigned char code = 0b00000100;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
     code = 0b00000000;
 
     if (operands[0].type == ACCUMULATOR) {
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == REGISTER) {
         code += 128;
         code += operands[0].value * 8;
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == LITERAL) {
         code += 192;
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
         code = operands[0].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     }
@@ -258,7 +251,7 @@ static void compileINC(std::vector<Operand>& operands, std::ofstream& output) {
     if (operands.size() > 0)
         throw std::runtime_error("Too many arguments for INC!");
 
-    unsigned char code = reverse(0b10000101);
+    unsigned char code = 0b10000101;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
 }
@@ -267,7 +260,7 @@ static void compileDEC(std::vector<Operand>& operands, std::ofstream& output) {
     if (operands.size() > 0)
         throw std::runtime_error("Too many arguments for DEC!");
 
-    unsigned char code = reverse(0b10000110);
+    unsigned char code = 0b10000110;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
 }
@@ -282,19 +275,19 @@ static void compileJMP(std::vector<Operand>& operands, std::ofstream& output) {
         throw std::runtime_error(
             "JMP argument type mismatch, literals are not supported!");
 
-    unsigned char code = reverse(0b00000111);
+    unsigned char code = 0b00000111;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
     code = 0b00000000;
 
     if (operands[0].type == ACCUMULATOR) {
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == REGISTER) {
         code += 192;
         code += operands[0].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     }
@@ -303,7 +296,7 @@ static void compileJMP(std::vector<Operand>& operands, std::ofstream& output) {
 static void compileHLT(std::vector<Operand>& operands, std::ofstream& output) {
     if (!operands.empty())
         throw std::runtime_error("Too many arguments for NOP!");
-    unsigned char code = reverse(0b11111111);
+    unsigned char code = 0b11111111;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
 }
@@ -317,26 +310,26 @@ static void compileJFZ(std::vector<Operand>& operands, std::ofstream& output) {
     if (operands[0].type == LITERAL)
         throw std::runtime_error(
             "First JFZ argument type mismatch, literals are not supported!");
-    if (operands[0].type != REGISTER)
+    if (operands[1].type != REGISTER)
         throw std::runtime_error(
             "Second JFZ argument type mismatch, literals and accumulator are "
             "not supported!");
 
-    unsigned char code = reverse(0b00001000);
+    unsigned char code = 0b00001000;
     output << std::hex << std::setfill('0') << std::setw(2) << (int)code
            << std::endl;
     code = 0b00000000;
 
     if (operands[0].type == ACCUMULATOR) {
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     } else if (operands[0].type == REGISTER) {
         code += 192;
         code += operands[0].value * 8;
         code += operands[1].value;
-        code = reverse(code);
+        code = code;
         output << std::hex << std::setfill('0') << std::setw(2) << (int)code
                << std::endl;
     }
