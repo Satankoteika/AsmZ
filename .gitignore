@@ -31,4 +31,8 @@
 *.out
 *.app
 
+# Build folder
 build
+
+# User-specific settings
+*.user
