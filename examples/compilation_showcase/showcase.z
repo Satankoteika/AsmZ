@@ -5,6 +5,5 @@ ADD A, R0
 INC // inline comment
 MV A, R0 // inline comment
 SUB A, R0
-JFZ A, R1
 
 HLT
