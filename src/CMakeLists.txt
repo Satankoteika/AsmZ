@@ -8,7 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(AsmZCompiler main.cpp
     CLI.hpp
     CompilerConfig.hpp
-    Translator.hpp)
+    Translator.hpp
+    Commands.hpp
+    Types.hpp)
 
 include(GNUInstallDirs)
 install(TARGETS AsmZCompiler

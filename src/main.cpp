@@ -6,7 +6,9 @@
 #include <ranges>
 #include <vector>
 #include "CLI.hpp"
+#include "Commands.hpp"
 #include "Translator.hpp"
+#include "Types.hpp"
 namespace fs = std::filesystem;
 
 #include <chrono>
@@ -14,6 +16,9 @@ using namespace std::chrono;
 
 int main(int argc, char* argv[]) {
     CompilerConfig::acceptableFlags = {"--output", "--binary-size"};
+    CompilerConfig::commands.impl = {&cNOP, &cLDA, &cMV1,  &cMV2, &cADD,
+                                     &cSUB, &cINC, &cDEC,  &cJMP, &cJFZ,
+                                     &cIN,  &cOUT, &cPUSH, &cPOP, &cHLT};
 
     InputInfo info(argc, argv);
     Translator tr(info);
